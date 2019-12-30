@@ -1,4 +1,4 @@
-t# izooto
+# izooto
 App notification service
 
 
