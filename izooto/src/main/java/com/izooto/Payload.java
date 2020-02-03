@@ -40,14 +40,7 @@ public class Payload {
     private String act2link;
     private int inapp;
     private String trayicon;
-    // add new payload data
-
-
-
-
-
     public String smallIconAccentColor;
-
     public String sound;
     public String ledColor;
     public int lockScreenVisibility = 1;

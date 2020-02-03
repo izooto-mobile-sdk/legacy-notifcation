@@ -16,6 +16,7 @@
 
 package com.izooto;
 
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -28,7 +29,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
-import androidx.core.app.NotificationCompat;
+
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -61,7 +62,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 Log.d(TAG, "Message data payload: " + "no notification");
             }
             if (remoteMessage.getNotification() != null) {
-                sendNotification(remoteMessage);
+               // sendNotification(remoteMessage);
                 Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
             }
         }
@@ -73,37 +74,38 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     }
 
-    private void sendNotification(RemoteMessage remoteMessage) {
-        Intent intent = new Intent();
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
-                PendingIntent.FLAG_ONE_SHOT);
-
-        String channelId = getString(R.string.default_notification_channel_id);
-        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        NotificationCompat.Builder notificationBuilder =
-                new NotificationCompat.Builder(this, channelId)
-                        .setSmallIcon(R.drawable.ic_notifications_black_24dp)
-                        .setContentTitle(remoteMessage.getNotification().getTitle())
-                        .setContentText(remoteMessage.getNotification().getBody())
-                        .setAutoCancel(true)
-                        .setAutoCancel(true)
-                        .setSound(defaultSoundUri)
-                        .setContentIntent(pendingIntent);
-
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-        // Since android Oreo notification channel is needed.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(channelId,
-                    "Channel human readable title",
-                    NotificationManager.IMPORTANCE_DEFAULT);
-            notificationManager.createNotificationChannel(channel);
-        }
-
-        notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
-    }
+//    @RequiresApi(api = Build.VERSION_CODES.O)
+//    private void sendNotification(RemoteMessage remoteMessage) {
+//        Intent intent = new Intent();
+//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
+//                PendingIntent.FLAG_ONE_SHOT);
+//
+//        String channelId = getString(R.string.default_notification_channel_id);
+//        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+//        Notification.Builder notificationBuilder =
+//                new Notification.Builder(this, channelId)
+//                        .setSmallIcon(R.drawable.ic_notifications_black_24dp)
+//                        .setContentTitle(remoteMessage.getNotification().getTitle())
+//                        .setContentText(remoteMessage.getNotification().getBody())
+//                        .setAutoCancel(true)
+//                        .setAutoCancel(true)
+//                        .setSound(defaultSoundUri)
+//                        .setContentIntent(pendingIntent);
+//
+//        NotificationManager notificationManager =
+//                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+//
+//        // Since android Oreo notification channel is needed.
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            NotificationChannel channel = new NotificationChannel(channelId,
+//                    "Channel human readable title",
+//                    NotificationManager.IMPORTANCE_DEFAULT);
+//            notificationManager.createNotificationChannel(channel);
+//        }
+//
+//        notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
+//    }
 
 
     public   void handleNow(final Map<String, String> data) {
@@ -130,9 +132,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 payload.setAct1link(payloadObj.optString("act1link"));
                 payload.setAct2name(payloadObj.optString("act2name"));
                 payload.setAct2link(payloadObj.optString("act2link"));
-              //  payload.setInapp(payloadObj.optInt("inapp"));
-                payload.setInapp(1);
-
+               // payload.setInapp(payloadObj.optInt("inapp"));
+                 payload.setInapp(1);
                 payload.setTrayicon(payloadObj.optString("trayicon"));
                 payload.setSmallIconAccentColor(payloadObj.optString("iconcolor"));
                 payload.setSound(payloadObj.optString("sound"));
@@ -145,9 +146,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 payload.setPriority(payloadObj.optInt("priority"));
                 payload.setRawPayload(payloadObj.optString("rawData"));
                 payload.setDeeplink(payloadObj.optString("deeplink"));
-               // deppLink = payloadObj.optString("deeplink");
-
-
             } else return;
         } catch (Exception e) {
             e.printStackTrace();

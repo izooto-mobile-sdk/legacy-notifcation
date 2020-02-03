@@ -23,10 +23,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.nio.charset.Charset;
 import java.util.Random;
 
 public class NotificationEventManager {
     private static Bitmap notificationIcon, notificationBanner;
+    private static int icon;
+    private String phoneNumber="";
 
     public static void manageNotification(Payload payload) {
         if (payload.getFetchURL() == null || payload.getFetchURL().isEmpty())
@@ -131,25 +135,32 @@ public class NotificationEventManager {
                 Notification.Builder notificationBuilder = null;
               //  NotificationCompat.Builder notificationBuilder = null;
                 Intent intent = null;
-                if (payload.getInapp() == 1) {
-                    Log.e("INAPP",""+payload.getInapp());
-                   // intent = WebViewActivity.createIntent(iZooto.appContext, link);
-                    intent = new Intent(iZooto.appContext, NotificationActionReceiver.class);
-
+//                if (payload.getInapp() == 1) {
+//                   // intent = new Intent(iZooto.appContext, NotificationActionReceiver.class);
+//                    Log.e("Motor",""+payload.getInapp());
+//                    intent =WebViewActivity.createIntent(iZooto.appContext,link);
+//
+//                }
+//                else
+//
+                if (iZooto.icon!=0)
+                {
+                    icon=iZooto.icon;
                 }
                 else
+                {
+                    icon=R.drawable.ic_notifications_black_24dp;
+                }
                     intent = new Intent(iZooto.appContext, NotificationActionReceiver.class);
-                //intent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
-
-                Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                    Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
                 intent.putExtra(AppConstant.KEY_WEB_URL, link);
                 intent.putExtra(AppConstant.KEY_NOTIFICITON_ID, 100);
                 intent.putExtra(AppConstant.KEY_IN_APP, payload.getInapp());
                 intent.putExtra(AppConstant.KEY_IN_CID,payload.getId());
                 intent.putExtra(AppConstant.KEY_IN_RID,payload.getRid());
                 intent.putExtra(AppConstant.KEY_IN_BUTOON,0);
-
-
+                intent.putExtra(AppConstant.KEY_IN_DEEP,payload.getDeeplink());
+                intent.putExtra(AppConstant.KEY_IN_PHONE,"NO");
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(iZooto.appContext, new Random().nextInt(100) /* Request code */, intent,
                         PendingIntent.FLAG_ONE_SHOT);
 
@@ -159,9 +170,10 @@ public class NotificationEventManager {
 //                PendingIntent pendingIntent = PendingIntent.getActivity(iZooto.appContext, new Random().nextInt(100) /* Request code */, intent,
 //                        PendingIntent.FLAG_ONE_SHOT);
 
+
                 notificationBuilder = new Notification.Builder(iZooto.appContext, channelId)
                         .setContentTitle(payload.getTitle())
-                        .setSmallIcon(R.drawable.ic_notifications_black_24dp)
+                        .setSmallIcon(icon)
                         .setContentText(payload.getMessage())
                         .setContentIntent(pendingIntent)
                         .setAutoCancel(true)
@@ -193,13 +205,34 @@ public class NotificationEventManager {
                 if (payload.getAct1name() != null && !payload
                         .getAct1name().isEmpty()) {
                     Intent btn1 = new Intent(iZooto.appContext, NotificationActionReceiver.class);
-//                    btn1.setAction(AppConstant.ACTION_BTN_ONE);
+                    String phone = null;
+
+                   if(link1.contains("http://route.izooto.com/"))
+                   {
+                       Log.e("Data",link1);
+
+                   }
+                   else
+                   {
+                       Log.e("Data2",link1);
+
+                   }
+
+                    String checknumber =decodeURL(payload.getAct1link());
+                    if(checknumber.contains("tel:"))
+                        phone=checknumber;
+                    else
+                        phone="NO";
+
+
                     btn1.putExtra(AppConstant.KEY_WEB_URL, link1);
                     btn1.putExtra(AppConstant.KEY_NOTIFICITON_ID, notificaitionId);
                     btn1.putExtra(AppConstant.KEY_IN_APP, payload.getInapp());
                     btn1.putExtra(AppConstant.KEY_IN_CID,payload.getId());
                     btn1.putExtra(AppConstant.KEY_IN_RID,payload.getRid());
                     btn1.putExtra(AppConstant.KEY_IN_BUTOON,1);
+                    btn1.putExtra(AppConstant.KEY_IN_DEEP,payload.getDeeplink());
+                    btn1.putExtra(AppConstant.KEY_IN_PHONE,phone);
 
 
                     PendingIntent pendingIntent1 = PendingIntent.getBroadcast(iZooto.appContext, new Random().nextInt(100), btn1, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -215,12 +248,24 @@ public class NotificationEventManager {
                 if (payload.getAct2name() != null && !payload.getAct2name().isEmpty()) {
                     Intent btn2 = new Intent(iZooto.appContext, NotificationActionReceiver.class);
 //                    btn2.setAction(AppConstant.ACTION_BTN_TWO);
+                    String phone;
+
+                    String checknumber =decodeURL(payload.getAct2link());
+                    if(checknumber.contains("tel:"))
+                        phone=checknumber;
+                    else
+                        phone="NO";
+
+
                     btn2.putExtra(AppConstant.KEY_WEB_URL, link2);
                     btn2.putExtra(AppConstant.KEY_NOTIFICITON_ID, notificaitionId);
                     btn2.putExtra(AppConstant.KEY_IN_APP, payload.getInapp());
                     btn2.putExtra(AppConstant.KEY_IN_CID,payload.getId());
                     btn2.putExtra(AppConstant.KEY_IN_RID,payload.getRid());
                     btn2.putExtra(AppConstant.KEY_IN_BUTOON,2);
+                    btn2.putExtra(AppConstant.KEY_IN_DEEP,payload.getDeeplink());
+                    btn2.putExtra(AppConstant.KEY_IN_PHONE,phone);
+
                     PendingIntent pendingIntent2 = PendingIntent.getBroadcast(iZooto.appContext, new Random().nextInt(100), btn2, PendingIntent.FLAG_UPDATE_CURRENT);
                     Notification.Action action2 =
                             new Notification.Action.Builder(
@@ -321,5 +366,19 @@ public class NotificationEventManager {
                 .build();
         return builtUri.toString();
     }
+    private static String decodeURL(String url)
+    {
 
-}
+            String[] arrOfStr = url.split("&frwd=");
+            String[] second = arrOfStr[1].split("&bkey=");
+            String decodeData = new String(Base64.decode(second[0], Base64.DEFAULT));
+             return decodeData;
+
+
+
+    }
+
+
+
+
+    }

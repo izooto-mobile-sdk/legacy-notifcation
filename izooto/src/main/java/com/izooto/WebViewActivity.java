@@ -1,12 +1,10 @@
 package com.izooto;
-
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.util.Log;
 import android.view.View;
 import android.webkit.WebChromeClient;
@@ -16,7 +14,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
-public class WebViewActivity extends AppCompatActivity {
+public class WebViewActivity extends Activity {
 
     private WebView mWebView;
     private ProgressBar mProgressBar;
@@ -35,7 +33,7 @@ public class WebViewActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_webview);
         initUI();
@@ -49,6 +47,7 @@ public class WebViewActivity extends AppCompatActivity {
 
 
 
+    @SuppressLint("SetJavaScriptEnabled")
     private void initUI() {
         getBundleData();
         mWebView = findViewById(R.id.webview);
@@ -61,6 +60,8 @@ public class WebViewActivity extends AppCompatActivity {
         mWebView.setWebChromeClient(new WebChromeClient());
         mWebView.setVerticalScrollBarEnabled(false);
         mWebView.setHorizontalScrollBarEnabled(false);
+        mWebView.getSettings().setPluginState(WebSettings.PluginState.ON);// add new line
+
         mWebView.setWebViewClient(new CustWebViewClient());
         mWebView.loadUrl(mUrl);
     }
@@ -102,5 +103,14 @@ public class WebViewActivity extends AppCompatActivity {
 
         }
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mWebView.canGoBack()) {
+            mWebView.goBack();
+        } else {
+            super.onBackPressed();
+        }
     }
 }
