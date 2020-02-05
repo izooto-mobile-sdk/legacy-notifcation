@@ -63,7 +63,7 @@ public class NotificationActionReceiver extends BroadcastReceiver {
 
 
 
-        if (inApp == 1 && phoneNumber.equalsIgnoreCase("No"))
+        if (inApp == 1 && "No".equalsIgnoreCase(phoneNumber))
             WebViewActivity.startActivity(context, mUrl);
         else {
             try {
@@ -75,7 +75,7 @@ public class NotificationActionReceiver extends BroadcastReceiver {
                 }
                 else
                 {
-                   if(phoneNumber.equalsIgnoreCase("No")) {
+                   if("No".equalsIgnoreCase(phoneNumber)) {
                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mUrl));
                        browserIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                        context.startActivity(browserIntent);
@@ -83,7 +83,7 @@ public class NotificationActionReceiver extends BroadcastReceiver {
                    else
                    {
                        Intent browserIntent = new Intent(Intent.ACTION_DIAL, Uri.parse(phoneNumber));
-                      browserIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                       browserIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                        context.startActivity(browserIntent);
 
                    }

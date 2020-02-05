@@ -206,25 +206,11 @@ public class NotificationEventManager {
                         .getAct1name().isEmpty()) {
                     Intent btn1 = new Intent(iZooto.appContext, NotificationActionReceiver.class);
                     String phone = null;
-
-                   if(link1.contains("http://route.izooto.com/"))
-                   {
-                       Log.e("Data",link1);
-
-                   }
-                   else
-                   {
-                       Log.e("Data2",link1);
-
-                   }
-
                     String checknumber =decodeURL(payload.getAct1link());
                     if(checknumber.contains("tel:"))
                         phone=checknumber;
                     else
                         phone="NO";
-
-
                     btn1.putExtra(AppConstant.KEY_WEB_URL, link1);
                     btn1.putExtra(AppConstant.KEY_NOTIFICITON_ID, notificaitionId);
                     btn1.putExtra(AppConstant.KEY_IN_APP, payload.getInapp());
