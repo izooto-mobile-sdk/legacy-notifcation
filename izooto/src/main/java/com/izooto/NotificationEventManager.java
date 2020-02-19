@@ -15,16 +15,13 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Base64;
-import android.util.Log;
 
 import androidx.annotation.RequiresApi;
+import androidx.core.app.NotificationCompat;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.nio.charset.Charset;
 import java.util.Random;
 
 public class NotificationEventManager {
@@ -132,8 +129,8 @@ public class NotificationEventManager {
                     link = getFinalUrl(payload);
                 }
                 String channelId = iZooto.appContext.getString(R.string.default_notification_channel_id);
-                Notification.Builder notificationBuilder = null;
-              //  NotificationCompat.Builder notificationBuilder = null;
+               // Notification.Builder notificationBuilder = null;
+                NotificationCompat.Builder notificationBuilder = null;
                 Intent intent = null;
 //                if (payload.getInapp() == 1) {
 //                   // intent = new Intent(iZooto.appContext, NotificationActionReceiver.class);
@@ -171,14 +168,15 @@ public class NotificationEventManager {
 //                        PendingIntent.FLAG_ONE_SHOT);
 
 
-                notificationBuilder = new Notification.Builder(iZooto.appContext, channelId)
+
+                notificationBuilder = new NotificationCompat.Builder(iZooto.appContext, channelId)//change
                         .setContentTitle(payload.getTitle())
                         .setSmallIcon(icon)
                         .setContentText(payload.getMessage())
                         .setContentIntent(pendingIntent)
                         .setAutoCancel(true)
                       //  .setStyle(new NotificationCompat.BigTextStyle().bigText(payload.getMessage()))
-                        .setStyle(new Notification.BigTextStyle().bigText(payload.getMessage()))
+                        .setStyle(new NotificationCompat.BigTextStyle().bigText(payload.getMessage()))//change
                         .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_SOUND).setVibrate(new long[]{1000, 1000})
                         .setSound(defaultSoundUri)
                         //.setOngoing(true)
@@ -192,7 +190,7 @@ public class NotificationEventManager {
                 else if (notificationBanner != null)
                     notificationBuilder.setLargeIcon(notificationBanner);
                 if (notificationBanner != null)
-                    notificationBuilder.setStyle(new Notification.BigPictureStyle()
+                    notificationBuilder.setStyle(new NotificationCompat.BigPictureStyle()//change
                             .bigPicture(notificationBanner)
                             .bigLargeIcon(notificationIcon).setSummaryText(payload.getMessage()));
 //                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
@@ -222,8 +220,8 @@ public class NotificationEventManager {
 
 
                     PendingIntent pendingIntent1 = PendingIntent.getBroadcast(iZooto.appContext, new Random().nextInt(100), btn1, PendingIntent.FLAG_UPDATE_CURRENT);
-                    Notification.Action action1 =
-                            new Notification.Action.Builder(
+                    NotificationCompat.Action action1 = //change
+                            new NotificationCompat.Action.Builder(
                                     0, payload.getAct1name(), pendingIntent1
                             ).build();
                     notificationBuilder.addAction(action1);
@@ -253,8 +251,8 @@ public class NotificationEventManager {
                     btn2.putExtra(AppConstant.KEY_IN_PHONE,phone);
 
                     PendingIntent pendingIntent2 = PendingIntent.getBroadcast(iZooto.appContext, new Random().nextInt(100), btn2, PendingIntent.FLAG_UPDATE_CURRENT);
-                    Notification.Action action2 =
-                            new Notification.Action.Builder(
+                    NotificationCompat.Action action2 =
+                            new NotificationCompat.Action.Builder(
                                     0, payload.getAct2name(), pendingIntent2
                             ).build();
                     notificationBuilder.addAction(action2);
@@ -267,7 +265,7 @@ public class NotificationEventManager {
                             "Channel human readable title", NotificationManager.IMPORTANCE_DEFAULT);
                     notificationManager.createNotificationChannel(channel);
                 }
-                
+
 
                 notificationManager.notify(notificaitionId, notificationBuilder.build());
 
