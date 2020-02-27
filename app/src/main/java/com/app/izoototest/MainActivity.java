@@ -2,21 +2,15 @@ package com.app.izoototest;
 
 import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
+import android.support.annotation.RequiresApi;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
-
 import com.izooto.NotificationHelperListener;
 import com.izooto.Payload;
 import com.izooto.iZooto;
-import com.izooto.iZootoDeepLinkListener;
-
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
@@ -30,8 +24,7 @@ public class MainActivity extends AppCompatActivity implements NotificationHelpe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("iZooto Test");
         iZooto.initialize(this).setNotificationReceiveListener(this).build();
 
 

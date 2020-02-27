@@ -132,7 +132,8 @@ public class iZooto {
                 FirebaseApp.initializeApp(appContext, firebaseOptions, "[DEFAULT]");
             }
         } catch (IllegalStateException ex) {
-            FirebaseApp.initializeApp(appContext, firebaseOptions, "[DEFAULT]");
+           // FirebaseApp.initializeApp(appContext, firebaseOptions, "[DEFAULT]");
+            Log.e("IZooto","IZooto");
 
         }
     }

@@ -2,14 +2,11 @@ package com.app.izoototest;
 
 import android.app.Application;
 import android.util.Log;
-import android.widget.Toast;
-
 import com.izooto.Lg;
 import com.izooto.TokenReceivedListener;
 import com.izooto.iZooto;
 
 public class AppController extends Application implements TokenReceivedListener
-
 {
 
     @Override
